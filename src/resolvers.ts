@@ -39,6 +39,22 @@ export const resolvers = {
 
       return null;
     },
+    decrement: (parent, args, { cache }) => {
+      let data;
+      try {
+        data = cache.readQuery<any>({
+          query: countQuery
+        });
+      } catch {}
+
+      cache.writeData({
+        data: {
+          count: data ? data.count - 1 : 0
+        }
+      });
+
+      return null;
+    },
     toggleTodoComplete: (parent, { id }, { cache, getCacheKey }) => {
       const cacheId = getCacheKey({ __typename: "Todo", id });
       const fragment = gql`
@@ -90,6 +106,14 @@ export const resolvers = {
         name: {
           __typename: "Name",
           ...data.name
+        },
+        location: {
+          __typename: "Location",
+          ...data.location,
+          street: {
+            __typename: "Street",
+            ...data.location.street
+          }
         }
       };
     },

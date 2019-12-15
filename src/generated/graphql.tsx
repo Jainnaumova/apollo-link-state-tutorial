@@ -28,6 +28,14 @@ export type IncrementMutation = {
   increment: Maybe<number>;
 };
 
+export type DecrementVariables = {};
+
+export type DecrementMutations = {
+  __typename?: "Mutation";
+
+  decrement: Maybe<number>;
+};
+
 export type SetCountVariables = {
   count: number;
 };
@@ -76,6 +84,8 @@ export type PokemonRandomPerson = {
   gender: Maybe<string>;
 
   name: Maybe<PokemonName>;
+
+  location: Maybe<PokemonLocation>;
 };
 
 export type PokemonName = {
@@ -86,6 +96,20 @@ export type PokemonName = {
   first: Maybe<string>;
 
   last: Maybe<string>;
+};
+
+export type PokemonLocation = {
+  __typename?: "Location";
+
+  street: Maybe<PokemonStreet>;
+};
+
+export type PokemonStreet = {
+  __typename?: "Street";
+
+  number: Maybe<number>;
+
+  name: Maybe<string>;
 };
 
 export type TodosVariables = {};
@@ -170,6 +194,22 @@ export function useIncrement(
 ) {
   return ReactApolloHooks.useMutation<IncrementMutation, IncrementVariables>(
     IncrementDocument,
+    baseOptions
+  );
+}
+export const DecrementDocument = gql`
+  mutation Decrement {
+    decrement @client
+  }
+`;
+export function useDecrement(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    DecrementMutations,
+    DecrementVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<DecrementMutations, DecrementVariables>(
+    DecrementDocument,
     baseOptions
   );
 }
@@ -402,6 +442,8 @@ export interface Mutation {
   setCount?: Maybe<number>;
 
   increment?: Maybe<number>;
+
+  decrement?: Maybe<number>;
 
   toggleTodoComplete?: Maybe<boolean>;
 }
@@ -892,6 +934,8 @@ export interface MutationResolvers<TContext = MyContext, TypeParent = {}> {
 
   increment?: MutationIncrementResolver<Maybe<number>, TypeParent, TContext>;
 
+  decrement?: MutationDecrementResolver<Maybe<number>, TypeParent, TContext>;
+
   toggleTodoComplete?: MutationToggleTodoCompleteResolver<
     Maybe<boolean>,
     TypeParent,
@@ -909,6 +953,11 @@ export interface MutationSetCountArgs {
 }
 
 export type MutationIncrementResolver<
+  R = Maybe<number>,
+  Parent = {},
+  TContext = MyContext
+> = Resolver<R, Parent, TContext>;
+export type MutationDecrementResolver<
   R = Maybe<number>,
   Parent = {},
   TContext = MyContext

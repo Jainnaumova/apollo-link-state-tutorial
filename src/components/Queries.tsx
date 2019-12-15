@@ -29,12 +29,19 @@ export const Queries: React.FC<Props> = () => {
               first
               last
             }
+            location {
+              street {
+                number
+                name
+              }
+            }
           }
           isFavorite @client(always: true)
         }
       }
     `
   );
+  console.log("DATA: ", q2.data);
 
   return (
     <div>
@@ -48,8 +55,14 @@ export const Queries: React.FC<Props> = () => {
         {q2.data.pokemon && `${q2.data.pokemon.isMaxHPDivisibleByCount}`}
       </div>
       <div>
-        randomPerson:{" "}
-        {q2.data.pokemon && JSON.stringify(q2.data.pokemon.randomPerson)}
+        gender: {q2.data.pokemon && `${q2.data.pokemon.randomPerson.gender}`}
+      </div>
+      <div>
+        adress:{" "}
+        {q2.data.pokemon &&
+          `${q2.data.pokemon.randomPerson.location.street.number} ${
+            q2.data.pokemon.randomPerson.location.street.name
+          }`}
       </div>
     </div>
   );
